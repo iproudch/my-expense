@@ -8,6 +8,9 @@ import {
 } from "react-hook-form";
 import * as yup from "yup";
 import { ObjectSchema, string } from "yup";
+import { addExpense } from "../service/service";
+import useModal from "../hooks/useModal";
+import { Timestamp } from "../service/firebase.config";
 
 type AddExpenseFormProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -18,12 +21,13 @@ export default function AddExpenseFormProvider(
   props: AddExpenseFormProviderProps
 ): JSX.Element | null {
   const { children, formRef } = props;
+  const { closeModal } = useModal();
 
   const defaultValues: IAddExpenseForm = useMemo(
     () => ({
       amount: undefined,
       category: "",
-      description: "",
+      description: undefined,
       sharing: false,
     }),
     []
@@ -46,10 +50,23 @@ export default function AddExpenseFormProvider(
     reset(defaultValues);
   }, [reset, defaultValues]);
 
+  const mockUser = undefined;
   const onSubmit: SubmitHandler<IAddExpenseForm> = async (data) => {
-    const { amount, category, description, sharing } = data;
+    const { description } = data;
     try {
-      console.log("submit", data);
+      const payload = {
+        ...data,
+        userId: mockUser || "user123",
+        description:
+          description && description?.length > 0 ? description : null,
+        date: Timestamp.now(),
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      };
+
+      await addExpense(payload);
+      closeModal();
+      reset(defaultValues);
     } catch (error) {
       console.error(error);
       throw error;
@@ -82,7 +99,7 @@ export interface IAddExpenseForm {
   amount?: number;
   category: string;
   // date: Date;
-  description?: string;
+  description?: string | null;
   sharing?: boolean;
 }
 

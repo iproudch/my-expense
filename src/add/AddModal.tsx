@@ -1,9 +1,6 @@
 import AddForm from "./AddForm";
 
-type AddExpenseProps = {
-  toggleModal?: () => void;
-};
-export function AddModal(props: AddExpenseProps) {
+export function AddModal() {
   return (
     <>
       <dialog

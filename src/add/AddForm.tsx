@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import useModal from "../hooks/useModal";
 import { CURRENCY } from "../constanst";
 import AddExpenseFormProvider, { IAddExpenseForm } from "./AddFormProvider";
 import { useFormContext } from "react-hook-form";
+import { Loader } from "../Loader";
+
 const CATEGORIES = ["Food", "Drink", "Shopping", "Bills", "Other"];
 
 export default function AddForm() {
@@ -18,26 +20,17 @@ export function AddFormContent() {
   const { closeModal } = useModal();
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useFormContext<IAddExpenseForm>();
-  const [value, setValue] = useState<number | undefined>(undefined);
-  const [category, setCategory] = useState<string>("Food");
-
   const ref = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     ref.current?.focus();
   }, []);
 
-  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setValue(input ? Number(input) : undefined);
-  };
-
-  const onAddItem = () => {
-    if (!value) return;
-    console.log(value);
-  };
-  return (
+  return isSubmitting ? (
+    <Loader />
+  ) : (
     <div className="card bg-base-100 w-96 shadow-xl relative z-1">
       <p className="absolute right-4 top-4" onClick={closeModal}>
         X
@@ -71,7 +64,7 @@ export function AddFormContent() {
           defaultValue=""
         >
           <option disabled value="">
-            Pick your favorite Simpson
+            Category
           </option>
           {CATEGORIES.map((tag) => (
             <option key={tag} value={tag}>
