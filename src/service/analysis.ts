@@ -1,4 +1,4 @@
-import { getFirestore, collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import {  collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 import { getMonthRange } from "../utils/range";
 import { EFirebaseCollections } from "./service";
 import { db } from "./firebase.config";
@@ -35,7 +35,6 @@ export const getTotalExpensesForMonth = async (userId: string) => {
       where('date', '<=', endOfMonth)
     );
   
-    // Real-time listener
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let totalAmount = 0;
   
@@ -43,11 +42,9 @@ export const getTotalExpensesForMonth = async (userId: string) => {
         totalAmount += doc.data().amount;
       });
   
-      // Call the provided callback with the new total
       callback(totalAmount);
     });
   
-    // Return unsubscribe function to stop listening when the component unmounts
     return unsubscribe;
   };
   

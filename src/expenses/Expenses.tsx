@@ -1,12 +1,17 @@
-import { ExpenseIcon } from "./ExpenseIcon";
 import { EFirebaseCollections, getExpenses } from "../service/service";
-import { useQuery } from "@tanstack/react-query";
-import { timestampToDate } from "../utils/range";
-import { query, collection, onSnapshot } from "firebase/firestore";
+import {
+  query,
+  collection,
+  onSnapshot,
+  limit,
+  orderBy,
+  where,
+} from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { IExpense } from "../interface/expenses";
 import { db } from "../service/firebase.config";
 import { Loader } from "../Loader";
+import { ExpenseList } from "./ExpenseList";
 
 export default function Expenses() {
   // const { data: expenses, isLoading } = useQuery({
@@ -17,43 +22,37 @@ export default function Expenses() {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const userId = "user123";
   useEffect(() => {
-    const q = query(collection(db, EFirebaseCollections.EXPENSES)); // Firestore query
-    // Set up the Firestore listener to listen for real-time updates
+    if (!userId) return;
+    const expensesRef = collection(db, EFirebaseCollections.EXPENSES);
+    const q = query(
+      expensesRef,
+      where("userId", "==", userId),
+      orderBy("date", "desc"),
+      limit(4)
+    );
+
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const expensesData = await getExpenses(snapshot);
-      setExpenses(expensesData);
+      setExpenses(expensesData.reverse());
       setIsLoading(false);
     });
 
-    return () => unsubscribe(); // Clean up listener on unmount
-  }, []);
+    return () => unsubscribe();
+  }, [userId]);
 
   return (
     <>
-      <h2 className="font-semibold">Expenses</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="font-semibold">Recent</h2>
+        {/* TODO: next phase */}
+        {/* <p className="font-semibold text-sm" style={{ cursor: "pointer" }}>
+          View all
+        </p> */}
+      </div>
       {isLoading ? <Loader /> : null}
-      {expenses?.map((item) => (
-        <div
-          key={item.id}
-          className="card bg-neutral text-neutral-content w-96"
-        >
-          <div className="card-body flex flex-row p-4 justify-between">
-            <div className="flex gap-2 items-center">
-              <ExpenseIcon category={item.category} />
-              <div className="flex flex-col">
-                <p className="font-semibold">{item.category}</p>
-                <p className="text-sm">{item.description}</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end">
-              <span className="font-bold">{item.amount} ฿</span>
-              {item.date}
-            </div>
-          </div>
-        </div>
-      ))}
+      {expenses ? <ExpenseList expenses={expenses} /> : null}
     </>
   );
 }

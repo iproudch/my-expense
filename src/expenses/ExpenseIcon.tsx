@@ -19,5 +19,9 @@ export function ExpenseIcon(props: ExpenseIconProps) {
     }
   }, [category]);
 
-  return <div>{icon}</div>;
+  return (
+    <div className="w-[45px] h-[45px] flex justify-center items-center rounded-full bg-base-200">
+      {icon}
+    </div>
+  );
 }
