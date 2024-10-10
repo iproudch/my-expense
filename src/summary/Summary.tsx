@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Summary() {
   return (
     <div className="card bg-neutral w-96 shadow-xl">

@@ -1,8 +1,8 @@
-import "./App.css";
-import Add from "./Add";
-import Summary from "./assets/summary/Summary";
+import "./style/App.css";
+import Summary from "./summary/Summary";
 import { Menu } from "./Menu";
 import Expenses from "./expenses/Expenses";
+import { AddModal } from "./add/AddModal";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <h1>My Expense</h1>
       <Summary />
       <Expenses />
-      {/* <Add /> */}
+      <AddModal />
       <div className="mt-auto">
         <Menu />
       </div>
