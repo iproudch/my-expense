@@ -20,6 +20,7 @@ export function AddFormContent() {
   const { closeModal } = useModal();
   const {
     register,
+    reset,
     formState: { errors, isSubmitting },
   } = useFormContext<IAddExpenseForm>();
   const ref = useRef<HTMLInputElement>(null);
@@ -28,11 +29,16 @@ export function AddFormContent() {
     ref.current?.focus();
   }, []);
 
+  const onClose = () => {
+    closeModal();
+    reset();
+  };
+
   return isSubmitting ? (
     <Loader />
   ) : (
     <div className="card bg-base-100 w-96 shadow-xl relative z-1">
-      <p className="absolute right-4 top-4" onClick={closeModal}>
+      <p className="absolute right-4 top-4" onClick={onClose}>
         X
       </p>
       <div className="card-body">

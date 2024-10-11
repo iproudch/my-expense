@@ -1,5 +1,5 @@
 import {  collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
-import { getMonthRange } from "../utils/range";
+import { getMonthRange } from "../utils/date";
 import { EFirebaseCollections } from "./service";
 import { db } from "./firebase.config";
 

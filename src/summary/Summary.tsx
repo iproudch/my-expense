@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  getTotalExpensesForMonth,
-  subscribeToTotalExpensesForMonth,
-} from "../service/analysis";
+import { subscribeToTotalExpensesForMonth } from "../service/analysis";
 import { useQuery } from "@tanstack/react-query";
 import { sum } from "firebase/firestore";
 import { CURRENCY } from "../constanst";

@@ -6,7 +6,8 @@ import { date } from "yup";
 import { format } from "date-fns";
 
 export enum EFirebaseCollections {
-  EXPENSES = "Expenses",
+  MASTER_DATA = "master-data",
+  EXPENSES = "expenses",
 }
 
 export async function addExpense(data: IAddExpenseForm) {
