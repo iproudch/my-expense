@@ -1,17 +1,26 @@
 import "./style/App.css";
-import Summary from "./summary/Summary";
-import { Menu } from "./Menu";
-import Expenses from "./expenses/Expenses";
-import { AddModal } from "./add/AddModal";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Create a client
-const queryClient = new QueryClient();
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import AppRoutes from "./AppRoutes";
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col min-h-screen gap-4">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/*" element={<AppRoutes />} />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+{
+  /* <div className="flex flex-col min-h-screen gap-4">
         <h1>My Expense</h1>
         <Summary />
         <Expenses />
@@ -19,9 +28,5 @@ function App() {
         <div className="mt-auto">
           <Menu />
         </div>
-      </div>
-    </QueryClientProvider>
-  );
+      </div> */
 }
-
-export default App;

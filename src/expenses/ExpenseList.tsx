@@ -1,3 +1,4 @@
+import { CURRENCY } from "../constanst";
 import { IExpense } from "../interface/expenses";
 import { ExpenseIcon } from "./ExpenseIcon";
 
@@ -19,7 +20,9 @@ export function ExpenseList(props: ExpenseListProps) {
         </div>
 
         <div className="flex flex-col items-end">
-          <span className="font-bold">{item.amount} ฿</span>
+          <span className="font-bold">
+            {item.amount} {CURRENCY}
+          </span>
           {item.date}
         </div>
       </div>
