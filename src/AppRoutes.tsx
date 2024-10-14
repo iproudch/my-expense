@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ApplicationLayout from "./ApplicationLayout";
-import HomePage from "./pages/homepage";
 import HistoryPage from "./pages/History";
+import HomePage from "./pages/Homepage";
 
 export default function AppRoutes(): JSX.Element {
   return (

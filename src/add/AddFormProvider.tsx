@@ -11,6 +11,7 @@ import { ObjectSchema, string } from "yup";
 import { addExpense } from "../service/service";
 import useModal from "../hooks/useModal";
 import { Timestamp } from "../service/firebase.config";
+import { useNavigate } from "react-router-dom";
 
 type AddExpenseFormProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -22,6 +23,7 @@ export default function AddExpenseFormProvider(
 ): JSX.Element | null {
   const { children, formRef } = props;
   const { closeModal } = useModal();
+  const navigate = useNavigate();
 
   const defaultValues: IAddExpenseForm = useMemo(
     () => ({
@@ -67,6 +69,7 @@ export default function AddExpenseFormProvider(
       await addExpense(payload);
       closeModal();
       reset(defaultValues);
+      navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
       throw error;

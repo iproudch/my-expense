@@ -1,15 +1,13 @@
-import { AddModal } from "./add/AddModal";
 import Expenses from "./expenses/Expenses";
-import { Menu } from "./Menu";
+import Header from "./Header";
 import Summary from "./summary/Summary";
 
 export default function HomepageOverviews() {
   return (
     <>
-      <h1>Hello</h1>
+      <Header title="Hello, " />
       <Summary />
       <Expenses />
-      <AddModal />
     </>
   );
 }

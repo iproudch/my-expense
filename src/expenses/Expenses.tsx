@@ -10,7 +10,6 @@ import {
 import { useState, useEffect } from "react";
 import { IExpense } from "../interface/expenses";
 import { db } from "../service/firebase.config";
-import { Loader } from "../Loader";
 import { ExpenseList } from "./ExpenseList";
 
 export default function Expenses() {
@@ -20,7 +19,6 @@ export default function Expenses() {
   // });
 
   const [expenses, setExpenses] = useState<IExpense[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const userId = "user123";
   useEffect(() => {
@@ -36,7 +34,6 @@ export default function Expenses() {
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const expensesData = await getExpenses(snapshot);
       setExpenses(expensesData.reverse());
-      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -51,7 +48,6 @@ export default function Expenses() {
           View all
         </p> */}
       </div>
-      {isLoading ? <Loader /> : null}
       {expenses ? <ExpenseList expenses={expenses} /> : null}
     </>
   );

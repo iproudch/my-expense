@@ -32,7 +32,7 @@ export function Menu() {
       <MenuItem
         icon={<IoPersonSharp size={22} />}
         label="Account"
-        path="/account"
+        // path="/account"
       />
     </ul>
   );

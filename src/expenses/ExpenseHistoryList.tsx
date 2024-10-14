@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
-import { IExpense } from "../interface/expenses";
-import { getAllExpenses } from "../service/service";
 import { ExpenseList } from "./ExpenseList";
+import Header from "../Header";
+import useExpenses from "../hooks/useExpenses";
 
 export function ExpenseHistoryList() {
-  const [expensesData, setExpensesData] = useState<IExpense[]>([]);
+  const userId = "user123";
+  const { expenses } = useExpenses(userId);
 
-  useEffect(() => {
-    getAllExpenses().then(setExpensesData);
-  }, []);
-
-  return <ExpenseList expenses={expensesData} />;
+  return (
+    <div className=" flex flex-col w-96 gap-4">
+      <Header title="History" />
+      <ExpenseList expenses={expenses} showOptions={true} />
+    </div>
+  );
 }
