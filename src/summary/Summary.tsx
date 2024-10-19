@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { subscribeToTotalExpensesForMonth } from "../service/analysis";
-import { useQuery } from "@tanstack/react-query";
-import { sum } from "firebase/firestore";
 import { CURRENCY } from "../constanst";
+import { useAuth } from "../context/UserProvider";
 
 export default function Summary() {
-  const userId = "user123";
+  const { userId } = useAuth();
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!userId) return;
     const unsubscribe = subscribeToTotalExpensesForMonth(userId, (total) => {
       setTotalExpenses(total);
       setIsLoading(false);

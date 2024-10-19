@@ -16,11 +16,13 @@ import React, {
 } from "react";
 import { firebaseAuth } from "../service/firebase.config";
 import { IUser } from "../interface/users";
+import { getUserDetail } from "../service/user";
 
 export interface IAuthContext {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  user?: User;
+  user?: IUser;
+  userId?: string;
   loading: boolean;
   error?: Error | AuthError;
 }
@@ -56,21 +58,39 @@ function AuthProvider(props: AuthProviderProps) {
       setLoading(true); // Keep loading true until Firebase check is complete
     }
 
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-      if (user) {
-        const { uid, email, displayName } = user;
-        const userData: IUser = { id: uid, email, displayName };
-        localStorage.setItem("user", JSON.stringify(userData)); // Save to localStorage
-        setUser(userData ?? undefined);
-      } else {
-        localStorage.removeItem("user");
+    const unsubscribe = onAuthStateChanged(
+      firebaseAuth,
+      async (firebaseUser) => {
+        if (firebaseUser) {
+          const { uid, email } = firebaseUser;
+
+          try {
+            const userDetail = await getUserDetail(uid);
+            const userData: IUser = {
+              userId: uid,
+              email,
+              displayName: userDetail?.displayName,
+              role: userDetail?.role,
+              ...userDetail,
+            };
+            localStorage.setItem("user", JSON.stringify(userData)); // Save the merged data
+            setUser(userData);
+          } catch (error) {
+            console.error("Error fetching user details from Firestore:", error);
+          }
+        } else {
+          localStorage.removeItem("user");
+          setUser(undefined);
+        }
+
+        setLoading(false);
       }
-      // setUser(user ?? undefined);
-      setLoading(false); // Only stop loading after Firebase confirms the user state
-    });
+    );
 
     return () => unsubscribe();
   }, []);
+
+  const userId = useMemo(() => user?.userId, [user?.userId]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -93,8 +113,9 @@ function AuthProvider(props: AuthProviderProps) {
       login,
       logout,
       loading,
+      userId,
     }),
-    [user, login, logout, loading]
+    [user, login, logout, loading, userId]
   );
 
   return (

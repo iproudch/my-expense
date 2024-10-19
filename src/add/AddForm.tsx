@@ -4,8 +4,7 @@ import { CURRENCY } from "../constanst";
 import AddExpenseFormProvider, { IAddExpenseForm } from "./AddFormProvider";
 import { useFormContext } from "react-hook-form";
 import { Loader } from "../Loader";
-
-const CATEGORIES = ["Food", "Drink", "Shopping", "Bills", "Other"];
+import useMasterData from "../hooks/useMasterData";
 
 export default function AddForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -24,6 +23,7 @@ export function AddFormContent() {
     formState: { errors, isSubmitting },
   } = useFormContext<IAddExpenseForm>();
   const ref = useRef<HTMLInputElement>(null);
+  const { categories } = useMasterData();
 
   useEffect(() => {
     ref.current?.focus();
@@ -72,9 +72,9 @@ export function AddFormContent() {
           <option disabled value="">
             Category
           </option>
-          {CATEGORIES.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
+          {categories?.map((ct) => (
+            <option key={ct.name} value={ct.name}>
+              {ct.name}
             </option>
           ))}
         </select>

@@ -11,16 +11,12 @@ import { useState, useEffect } from "react";
 import { IExpense } from "../interface/expenses";
 import { db } from "../service/firebase.config";
 import { ExpenseList } from "./ExpenseList";
+import { useAuth } from "../context/UserProvider";
 
 export default function Expenses() {
-  // const { data: expenses, isLoading } = useQuery({
-  //   queryKey: ["expenses"],
-  //   queryFn: getExpenses,
-  // });
-
   const [expenses, setExpenses] = useState<IExpense[]>([]);
+  const { userId } = useAuth();
 
-  const userId = "user123";
   useEffect(() => {
     if (!userId) return;
     const expensesRef = collection(db, EFirebaseCollections.EXPENSES);

@@ -12,6 +12,7 @@ import { addExpense } from "../service/service";
 import useModal from "../hooks/useModal";
 import { Timestamp } from "../service/firebase.config";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/UserProvider";
 
 type AddExpenseFormProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -24,6 +25,7 @@ export default function AddExpenseFormProvider(
   const { children, formRef } = props;
   const { closeModal } = useModal();
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
   const defaultValues: IAddExpenseForm = useMemo(
     () => ({
@@ -52,13 +54,12 @@ export default function AddExpenseFormProvider(
     reset(defaultValues);
   }, [reset, defaultValues]);
 
-  const mockUser = undefined;
   const onSubmit: SubmitHandler<IAddExpenseForm> = async (data) => {
     const { description } = data;
     try {
       const payload = {
+        userId,
         ...data,
-        userId: mockUser || "user123",
         description:
           description && description?.length > 0 ? description : null,
         date: Timestamp.now(),
@@ -69,7 +70,7 @@ export default function AddExpenseFormProvider(
       await addExpense(payload);
       closeModal();
       reset(defaultValues);
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     } catch (error) {
       console.error(error);
       throw error;
