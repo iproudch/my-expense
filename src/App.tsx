@@ -19,14 +19,3 @@ function App() {
 }
 
 export default App;
-{
-  /* <div className="flex flex-col min-h-screen gap-4">
-        <h1>My Expense</h1>
-        <Summary />
-        <Expenses />
-        <AddModal />
-        <div className="mt-auto">
-          <Menu />
-        </div>
-      </div> */
-}
