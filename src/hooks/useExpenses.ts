@@ -1,6 +1,6 @@
 import { onSnapshot, collection, query, where, limit, startAfter, QueryDocumentSnapshot } from "firebase/firestore";
-import { format } from "date-fns"; // For date formatting
-import { useState, useEffect } from "react"; // React hooks
+import { format } from "date-fns";
+import { useState, useEffect } from "react";
 import { db } from "../service/firebase.config";
 import { EFirebaseCollections } from "../service/service";
 import { IExpense } from "../interface/expenses";
@@ -10,7 +10,7 @@ export default function useExpenses(userId: string, lastDoc?: QueryDocumentSnaps
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId) return; // Skip if no userId is provided
+    if (!userId) return;
 
     const collectionRef = collection(db, EFirebaseCollections.EXPENSES);
 
@@ -51,7 +51,6 @@ export default function useExpenses(userId: string, lastDoc?: QueryDocumentSnaps
       }
     );
 
-    // Cleanup the listener on component unmount or when userId changes
     return () => unsubscribe();
   }, [userId, lastDoc]);
 
