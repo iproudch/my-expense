@@ -1,6 +1,5 @@
 import {
   AuthError,
-  User,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,

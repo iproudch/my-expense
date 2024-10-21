@@ -1,6 +1,5 @@
 import {
   IoAddCircleSharp,
-  IoFolderSharp,
   IoHomeSharp,
   IoPersonSharp,
   IoPodiumSharp,

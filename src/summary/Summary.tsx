@@ -6,13 +6,13 @@ import { useAuth } from "../context/UserProvider";
 export default function Summary() {
   const { userId } = useAuth();
   const [totalExpenses, setTotalExpenses] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) return;
     const unsubscribe = subscribeToTotalExpensesForMonth(userId, (total) => {
       setTotalExpenses(total);
-      setIsLoading(false);
+      // setIsLoading(false);
     });
 
     return () => unsubscribe();

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export type UseModalResponse = {
 openModal: () => void;
 closeModal: () => void;
@@ -8,8 +6,6 @@ closeModal: () => void;
 
 
 export default function useModal(): UseModalResponse {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
 
   const openModal = () => {
     const modal = document?.getElementById(
