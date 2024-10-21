@@ -9,7 +9,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/my-expense">
         <Routes>
           <Route path="/*" element={<AppRoutes />} />
         </Routes>
