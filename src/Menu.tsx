@@ -12,8 +12,8 @@ export function Menu() {
   const { openModal: add } = useModal();
   return (
     <ul className="menu menu-horizontal bg-base-100 rounded-box w-full flex justify-center items-center">
-      <MenuItem icon={<IoHomeSharp size={22} />} label="Home" path="/home" />
-      <MenuItem icon={<IoTime size={22} />} label="History" path="/history" />
+      <MenuItem icon={<IoHomeSharp size={22} />} label="Home" path="home" />
+      <MenuItem icon={<IoTime size={22} />} label="History" path="history" />
 
       <li className="flex-1">
         <div
@@ -31,7 +31,7 @@ export function Menu() {
       <MenuItem
         icon={<IoPersonSharp size={22} />}
         label="Account"
-        path="/account"
+        path="account"
       />
     </ul>
   );

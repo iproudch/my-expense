@@ -14,9 +14,9 @@ export default function AppRoutes(): JSX.Element {
         <Route index element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<ApplicationLayout />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/account" element={<UserPage />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="account" element={<UserPage />} />
           </Route>
         </Route>
         <Route path="*" element={<p>Not Found</p>} />
