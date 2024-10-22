@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/my-expense/" />
+    <script type="text/javascript">
+      // Extract the path after "/my-expense" and redirect back to the React app
+      var redirectTo = window.location.pathname.replace('/my-expense/', '');
+      window.location.href = '/my-expense/' + redirectTo;
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>
