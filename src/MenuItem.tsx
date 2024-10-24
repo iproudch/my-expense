@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 type MenuItemProps = {
   icon: React.ReactNode;
   label?: string;
@@ -7,13 +9,13 @@ export default function MenuItem(props: MenuItemProps) {
   const { icon, label, path } = props;
   return (
     <li className="flex-1">
-      <a
+      <Link
+        to={path ?? "#"}
         className="flex flex-col items-center justify-center gap-1 p-0"
-        href={path}
       >
         {icon}
         {label ? <p>{label}</p> : null}
-      </a>
+      </Link>
     </li>
   );
 }
