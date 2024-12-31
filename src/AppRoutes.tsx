@@ -6,6 +6,7 @@ import UserPage from "./pages/UserPage";
 import LoginPage from "./pages/LoginPage";
 import { AuthProvider } from "./context/UserProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import AnalyticPage from "./pages/AnalyticPage";
 
 export default function AppRoutes(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes(): JSX.Element {
           <Route element={<ApplicationLayout />}>
             <Route path="home" element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
+            <Route path="analytic" element={<AnalyticPage />} />
             <Route path="account" element={<UserPage />} />
           </Route>
         </Route>

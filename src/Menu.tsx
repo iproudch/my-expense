@@ -27,7 +27,11 @@ export function Menu() {
           </a>
         </div>
       </li>
-      <MenuItem icon={<IoPodiumSharp size={22} />} label="Analytics" />
+      <MenuItem
+        icon={<IoPodiumSharp size={22} />}
+        label="Analytics"
+        path="analytic"
+      />
       <MenuItem
         icon={<IoPersonSharp size={22} />}
         label="Account"

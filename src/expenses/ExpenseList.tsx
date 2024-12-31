@@ -1,5 +1,5 @@
 import { IoIosMore } from "react-icons/io";
-import { CURRENCY } from "../constanst";
+import { CURRENCY } from "../constants";
 import { IExpense } from "../interface/expenses";
 import { Loader } from "../Loader";
 import { ExpenseIcon } from "./ExpenseIcon";

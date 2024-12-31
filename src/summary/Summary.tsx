@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { subscribeToTotalExpensesForMonth } from "../service/analysis";
-import { CURRENCY } from "../constanst";
+import { CURRENCY } from "../constants";
 import { useAuth } from "../context/UserProvider";
 
 export default function Summary() {

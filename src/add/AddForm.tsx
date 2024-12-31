@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import useModal from "../hooks/useModal";
-import { CURRENCY } from "../constanst";
+import { CURRENCY } from "../constants";
 import AddExpenseFormProvider, { IAddExpenseForm } from "./AddFormProvider";
 import { useFormContext } from "react-hook-form";
 import { Loader } from "../Loader";
