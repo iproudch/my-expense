@@ -119,20 +119,20 @@ function ExpenseSummary(props: ExpenseSummaryProps) {
   );
 }
 
-type CardProps = {
-  title: string;
-};
-function Card(props: CardProps) {
-  const { title } = props;
-  return (
-    <div className="card bg-neutral text-neutral-content w-96">
-      <div className="card-body items-center text-center">
-        <h2 className="card-title">{title}</h2>
-        <p>We are using cookies for no reason.</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-primary">Accept</button>
-        </div>
-      </div>
-    </div>
-  );
-}
+// type CardProps = {
+//   title: string;
+// };
+// function Card(props: CardProps) {
+//   const { title } = props;
+//   return (
+//     <div className="card bg-neutral text-neutral-content w-96">
+//       <div className="card-body items-center text-center">
+//         <h2 className="card-title">{title}</h2>
+//         <p>We are using cookies for no reason.</p>
+//         <div className="card-actions justify-end">
+//           <button className="btn btn-primary">Accept</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
