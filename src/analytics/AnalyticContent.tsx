@@ -1,138 +1,127 @@
 import { useState } from "react";
 import { getTotalMonthlyExpenses } from "../service/analysis";
 import { useAuth } from "../context/UserProvider";
-import { CURRENCY } from "../constants";
+import { CURRENCY, YEARS, EMonths } from "../constants";
+import { IoPersonOutline, IoSearch } from "react-icons/io5";
+import Card from "../Card";
+import ExpenseSummary from "./ExpenseSummary";
 
 export function AnalyticsContent() {
-  const [month, setMonth] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState<number | undefined>(
+    undefined
+  );
+  const [year, setYear] = useState(YEARS[YEARS.length - 1]);
   const [summary, setSummary] = useState<number | undefined>(undefined);
   const [includeSharing, setIncludeSharing] = useState<boolean>(true);
   const { userId } = useAuth();
 
-  const onChangeFilter = async (month: number, sharing?: boolean) => {
-    setMonth(month);
+  const onChangeFilter = async (
+    month: number,
+    year: number,
+    sharing?: boolean
+  ) => {
+    setSummary(undefined);
+    setSelectedMonth(month);
+    setYear(year);
     setIncludeSharing(sharing || includeSharing);
+  };
+
+  const onSearch = async () => {
+    console.log("selectedMonth", selectedMonth);
+    console.log("!selectedMonth", !selectedMonth);
+
+    if (!userId || !selectedMonth || !year) return;
     const expenses = await getTotalMonthlyExpenses(
-      userId as string,
+      userId,
       includeSharing,
-      month,
-      2024
+      selectedMonth + 1,
+      year
     );
     setSummary(expenses);
   };
+
+  const prevYear = () => {
+    if (year === 2024) return;
+    setYear(year - 1);
+  };
+
+  const nextYear = () => {
+    if (year === 2025) return;
+    setYear(year + 1);
+  };
+
   return (
     <>
       <div className="flex items-center justify-items-center flex-row gap-4">
-        {/* <Card title={"Expense"} /> */}
-        {/* <Card title={"Expense"} /> */}
-        <select
-          className="select select-bordered w-full max-w-xs"
-          value={month}
-          // onChange={(e) => setMonth(parseInt(e.target.value))}
-          onChange={(e) => onChangeFilter(parseInt(e.target.value))}
-        >
-          <option value={0} disabled>
-            Select month
-          </option>
-          <option value={1}>January</option>
-          <option value={2}>February</option>
-          <option value={3}>March</option>
-          <option value={4}>April</option>
-          <option value={5}>May</option>
-          <option value={6}>June</option>
-          <option value={7}>July</option>
-          <option value={8}>August</option>
-          <option value={9}>September</option>
-          <option value={10}>October</option>
-          <option value={11}>November</option>
-          <option value={12}>December</option>
-        </select>
+        <Card>
+          <div className="flex flex-row justify-between font-semibold px-4 py-0">
+            <span
+              className="font-semibold text-primary cursor-pointer"
+              onClick={prevYear}
+            >
+              {"<"}
+            </span>
+            {year}
+            <span
+              className="font-semibold text-primary cursor-pointer"
+              onClick={nextYear}
+            >
+              {">"}
+            </span>
+          </div>
+          <div className="grid grid-cols-6 ">
+            {Object.keys(EMonths).map((month, index) => (
+              <div
+                key={month}
+                className={`flex justify-center text-sm gap-1 cursor-pointer w-10 hover:bg-neutral hover:text-primary ${
+                  index === selectedMonth ? "bg-primary text-white rounded" : ""
+                }`}
+                onClick={() => onChangeFilter(index, year, includeSharing)}
+              >
+                {month}
+              </div>
+            ))}
+          </div>
+          <hr className="border-gray-600 mt-2 mb-2" />
+          <div className="flex flex-row justify-between gap-4 text-sm items-center">
+            <span className="flex flex-row gap-2 ">
+              <input
+                type="checkbox"
+                defaultChecked
+                className="checkbox checkbox-xs checkbox-primary"
+                onChange={(e) => setIncludeSharing(e.target.checked)}
+              />
+              include sharing expenses
+            </span>
+            <button
+              className="btn btn-sm btn-primary text-white"
+              onClick={() => void onSearch()}
+            >
+              <IoSearch />
+              Search
+            </button>
+          </div>
+        </Card>
       </div>
-      <div className="flex flex-row gap-4">
-        <input
-          type="checkbox"
-          className="checkbox"
-          defaultChecked
-          onChange={(e) => onChangeFilter(month, e.target.checked)}
-        />{" "}
-        include sharing expenses
-      </div>
-      {summary ? (
-        <div className="flex flex-row gap-4">
-          <h1 className="font-semibold">
-            {summary} {CURRENCY}
-          </h1>
-        </div>
-      ) : !summary && month !== 0 ? (
-        <div className="flex flex-row gap-4">
-          <span className="font-semibold">No expenses found</span>
-        </div>
-      ) : null}
-      {summary && <ExpenseSummary total={summary} />}
-    </>
-  );
-}
 
-type ExpenseSummaryProps = {
-  total?: number;
-};
-function ExpenseSummary(props: ExpenseSummaryProps) {
-  const { total } = props;
-  const [percentage, setPercentage] = useState<number | undefined>(50);
-  const [custom, setCustom] = useState<boolean>(false);
-
-  const onChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setPercentage(value >= 0 && value <= 100 ? value : undefined);
-  };
-
-  const totalPerPerson = total && percentage ? (total * percentage) / 100 : 0;
-  return (
-    <>
-      <div className="flex flex-col">
-        <span>
-          Total for each person:{" "}
-          <span className="font-semibold">
-            {totalPerPerson.toFixed(2)} {CURRENCY}
-          </span>
-        </span>
-        <i className="text-xs">Calculated based on {percentage}%</i>
-      </div>
-      <div className="flex flex-row gap-4">
-        <input
-          type="checkbox"
-          className="checkbox"
-          onChange={(e) => setCustom(e.target.checked)}
-        />{" "}
-        Custom Percentage
-        {custom ? (
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={percentage}
-            onChange={onChangePercentage}
-          />
+      <Card>
+        {summary ? (
+          <>
+            <div className="flex flex-row gap-4 items-center">
+              <h1 className="font-semibold text-primary">{summary}</h1>
+              <span className="font-semibold text-4xl">{CURRENCY}</span>
+            </div>
+            <span className="text-xs">
+              total expenses on {selectedMonth} {year}
+            </span>
+          </>
+        ) : !summary && selectedMonth !== 0 ? (
+          <div className="flex flex-row gap-4">
+            <span className="font-semibold">No expenses found</span>
+          </div>
         ) : null}
-      </div>
+        {summary && <ExpenseSummary total={summary} />}
+      </Card>
     </>
   );
 }
-
-// type CardProps = {
-//   title: string;
-// };
-// function Card(props: CardProps) {
-//   const { title } = props;
-//   return (
-//     <div className="card bg-neutral text-neutral-content w-96">
-//       <div className="card-body items-center text-center">
-//         <h2 className="card-title">{title}</h2>
-//         <p>We are using cookies for no reason.</p>
-//         <div className="card-actions justify-end">
-//           <button className="btn btn-primary">Accept</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
