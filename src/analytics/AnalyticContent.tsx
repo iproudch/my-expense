@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { getTotalMonthlyExpenses } from "../service/analysis";
-import { useAuth } from "../context/UserProvider";
-import { CURRENCY, YEARS, EMonths } from "../constants";
-import { IoPersonOutline, IoSearch } from "react-icons/io5";
+import { IoSearch } from "react-icons/io5";
 import Card from "../Card";
+import { CURRENCY, Months, YEARS } from "../constants";
+import { useAuth } from "../context/UserProvider";
+import { getTotalMonthlyExpenses } from "../service/analysis";
 import ExpenseSummary from "./ExpenseSummary";
 
 export function AnalyticsContent() {
@@ -15,22 +15,14 @@ export function AnalyticsContent() {
   const [includeSharing, setIncludeSharing] = useState<boolean>(true);
   const { userId } = useAuth();
 
-  const onChangeFilter = async (
-    month: number,
-    year: number,
-    sharing?: boolean
-  ) => {
+  const onChangeFilter = async (month: number, year: number) => {
     setSummary(undefined);
     setSelectedMonth(month);
     setYear(year);
-    setIncludeSharing(sharing || includeSharing);
   };
 
   const onSearch = async () => {
-    console.log("selectedMonth", selectedMonth);
-    console.log("!selectedMonth", !selectedMonth);
-
-    if (!userId || !selectedMonth || !year) return;
+    if (!userId || !year || selectedMonth === undefined) return;
     const expenses = await getTotalMonthlyExpenses(
       userId,
       includeSharing,
@@ -70,13 +62,13 @@ export function AnalyticsContent() {
             </span>
           </div>
           <div className="grid grid-cols-6 ">
-            {Object.keys(EMonths).map((month, index) => (
+            {Months.map((month, index) => (
               <div
                 key={month}
                 className={`flex justify-center text-sm gap-1 cursor-pointer w-10 hover:bg-neutral hover:text-primary ${
                   index === selectedMonth ? "bg-primary text-white rounded" : ""
                 }`}
-                onClick={() => onChangeFilter(index, year, includeSharing)}
+                onClick={() => onChangeFilter(index, year)}
               >
                 {month}
               </div>
@@ -89,7 +81,7 @@ export function AnalyticsContent() {
                 type="checkbox"
                 defaultChecked
                 className="checkbox checkbox-xs checkbox-primary"
-                onChange={(e) => setIncludeSharing(e.target.checked)}
+                onChange={() => setIncludeSharing((check) => !check)}
               />
               include sharing expenses
             </span>
@@ -112,7 +104,7 @@ export function AnalyticsContent() {
               <span className="font-semibold text-4xl">{CURRENCY}</span>
             </div>
             <span className="text-xs">
-              total expenses on {selectedMonth} {year}
+              total expenses on {Months[selectedMonth ?? 0]} {year}
             </span>
           </>
         ) : !summary && selectedMonth !== 0 ? (
