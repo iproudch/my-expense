@@ -8,6 +8,7 @@ export enum EFirebaseCollections {
   MASTER_DATA = "master-data",
   EXPENSES = "expenses",
   USERS = "users",
+  MONTHLY_PAYMENTS = "monthly-payments"
 }
 
 export async function addExpense(data: IAddExpenseForm) {
@@ -105,27 +106,3 @@ export async function getAllExpenses(
 }
 
 
-export async function getAllExpenses0(): Promise<IExpense[]> {
-  try {
-    const collectionRef = collection(db, EFirebaseCollections.EXPENSES);
-    const querySnapshot = await getDocs(collectionRef);
-
-    if (!querySnapshot.empty) {
-      const data = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt.toDate(), // Converts Timestamp to Date
-        };
-      });
-      return data as IExpense[];
-    } else {
-      console.log("No documents found in the collection.");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching collection data:", error);
-    return [];
-  }
-}

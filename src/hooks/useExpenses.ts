@@ -1,4 +1,4 @@
-import { onSnapshot, collection, query, where, limit, startAfter, QueryDocumentSnapshot } from "firebase/firestore";
+import { onSnapshot, collection, query, where, limit, startAfter, QueryDocumentSnapshot, orderBy } from "firebase/firestore";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { db } from "../service/firebase.config";
@@ -11,22 +11,25 @@ export default function useExpenses(userId: string, lastDoc?: QueryDocumentSnaps
 
   useEffect(() => {
     if (!userId) return;
-
+  
     const collectionRef = collection(db, EFirebaseCollections.EXPENSES);
-
-    // Create a query to filter by userId and limit to 10 records
     let expensesQuery = query(
       collectionRef,
       where("userId", "==", userId),
+      orderBy("date", "desc"),
       limit(10)
     );
-
-    // If lastDoc is provided, paginate using startAfter
+  
     if (lastDoc) {
-      expensesQuery = query(expensesQuery, startAfter(lastDoc));
+      expensesQuery = query(
+        collectionRef,
+        where("userId", "==", userId),
+        orderBy("date", "desc"),
+        startAfter(lastDoc),
+        limit(10)
+      );
     }
 
-    // Set up real-time listener using onSnapshot
     const unsubscribe = onSnapshot(
       expensesQuery,
       (querySnapshot) => {
@@ -42,7 +45,7 @@ export default function useExpenses(userId: string, lastDoc?: QueryDocumentSnaps
           });
           setExpenses(updatedExpenses);
         } else {
-          setExpenses([]); // No documents found, set expenses to an empty array
+          setExpenses([]);
         }
       },
       (error) => {
@@ -50,7 +53,7 @@ export default function useExpenses(userId: string, lastDoc?: QueryDocumentSnaps
         setError("Error fetching real-time data.");
       }
     );
-
+  
     return () => unsubscribe();
   }, [userId, lastDoc]);
 

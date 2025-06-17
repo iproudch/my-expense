@@ -1,7 +1,8 @@
-import {  collection, query, where, getDocs, onSnapshot, Timestamp } from "firebase/firestore";
+import {  collection, query, where, getDocs, onSnapshot, Timestamp, addDoc } from "firebase/firestore";
 import { getMonthRange } from "../utils/date";
 import { EFirebaseCollections } from "./service";
 import { db } from "./firebase.config";
+import { IMonthlyPayment } from "../interface/monthly-payment";
 
 export const getTotalExpensesForMonth = async (userId: string) => {
     const { startOfMonth, endOfMonth } = getMonthRange();
@@ -79,4 +80,31 @@ export const getTotalExpensesForMonth = async (userId: string) => {
       console.error("Error fetching expenses:", error);
     }
   };
+
+  export const getMonthlyPaid = async (userId: string, month: number, year: number) => {
+    try {
+      const monthlyPaymentsRef = collection(db, EFirebaseCollections.MONTHLY_PAYMENTS);
+  
+      const q = query(
+        monthlyPaymentsRef,
+        where("userId", "==", userId),
+        where("month", "==", month),
+        where("year", "==", year)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs[0]?.data()?.isPaid;
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
+
+  export const addUpdateMonthlyPayment = async (data: IMonthlyPayment) => {
+    try {
+      const collectionRef = collection(db, EFirebaseCollections.MONTHLY_PAYMENTS);
+      await addDoc(collectionRef, data);
+    } catch (error) {
+      console.error("Error addUpdateMonthlyPayment document:", error);
+    }
+  }
   

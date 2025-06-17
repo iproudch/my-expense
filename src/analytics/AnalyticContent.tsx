@@ -3,15 +3,19 @@ import { IoSearch } from "react-icons/io5";
 import Card from "../Card";
 import { CURRENCY, Months, YEARS } from "../constants";
 import { useAuth } from "../context/UserProvider";
-import { getTotalMonthlyExpenses } from "../service/analysis";
+import { getMonthlyPaid, getTotalMonthlyExpenses } from "../service/analysis";
 import ExpenseSummary from "./ExpenseSummary";
 
+export type Summary = {
+  total?: number;
+  isPaid?: boolean;
+};
 export function AnalyticsContent() {
-  const [selectedMonth, setSelectedMonth] = useState<number | undefined>(
-    undefined
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    Number(new Date().getMonth())
   );
   const [year, setYear] = useState(YEARS[YEARS.length - 1]);
-  const [summary, setSummary] = useState<number | undefined>(undefined);
+  const [summary, setSummary] = useState<Summary | undefined>(undefined);
   const [includeSharing, setIncludeSharing] = useState<boolean>(true);
   const { userId } = useAuth();
 
@@ -29,7 +33,8 @@ export function AnalyticsContent() {
       selectedMonth + 1,
       year
     );
-    setSummary(expenses);
+    const isPaid = await getMonthlyPaid(userId, selectedMonth + 1, year);
+    setSummary({ total: expenses, isPaid });
   };
 
   const prevYear = () => {
@@ -96,24 +101,28 @@ export function AnalyticsContent() {
         </Card>
       </div>
 
-      <Card>
-        {summary ? (
-          <>
-            <div className="flex flex-row gap-4 items-center">
-              <h1 className="font-semibold text-primary">{summary}</h1>
-              <span className="font-semibold text-4xl">{CURRENCY}</span>
-            </div>
-            <span className="text-xs">
-              total expenses on {Months[selectedMonth ?? 0]} {year}
-            </span>
-          </>
-        ) : !summary && selectedMonth !== 0 ? (
-          <div className="flex flex-row gap-4">
-            <span className="font-semibold">No expenses found</span>
+      {summary ? (
+        <Card>
+          <div className="flex flex-row gap-4 items-center">
+            <h1 className="font-semibold text-primary">{summary.total}</h1>
+            <span className="font-semibold text-4xl">{CURRENCY}</span>
           </div>
-        ) : null}
-        {summary && <ExpenseSummary total={summary} />}
-      </Card>
+          <span className="text-xs">
+            total expenses on {Months[selectedMonth ?? 0]} {year}
+          </span>
+          {summary && (
+            <ExpenseSummary
+              summary={summary}
+              selectedMonth={selectedMonth}
+              year={year}
+            />
+          )}
+        </Card>
+      ) : (
+        <Card>
+          <span className="font-semibold">No expenses found</span>
+        </Card>
+      )}
     </>
   );
 }
