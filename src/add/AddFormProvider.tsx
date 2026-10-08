@@ -13,6 +13,7 @@ import useModal from "../hooks/useModal";
 import { Timestamp } from "../service/firebase.config";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/UserProvider";
+import { format } from "date-fns";
 
 type AddExpenseFormProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -33,6 +34,7 @@ export default function AddExpenseFormProvider(
       category: "",
       description: undefined,
       sharing: false,
+      expenseDate: format(new Date(), "yyyy-MM-dd"),
     }),
     []
   );
@@ -55,14 +57,15 @@ export default function AddExpenseFormProvider(
   }, [reset, defaultValues]);
 
   const onSubmit: SubmitHandler<IAddExpenseForm> = async (data) => {
-    const { description } = data;
+    const { description, expenseDate, ...expense } = data;
     try {
+      const [y, m, d] = expenseDate.split("-").map(Number);
       const payload = {
         userId,
-        ...data,
+        ...expense,
         description:
           description && description?.length > 0 ? description : null,
-        date: Timestamp.now(),
+        date: Timestamp.fromDate(new Date(y, m - 1, d)),
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       };
@@ -105,6 +108,7 @@ export interface IAddExpenseForm {
   // date: Date;
   description?: string | null;
   sharing?: boolean;
+  expenseDate: string; // yyyy-MM-dd, converted to the Firestore `date` on submit
 }
 
 const AddExpenseFormSchema: ObjectSchema<IAddExpenseForm> = yup.object().shape({
@@ -112,4 +116,5 @@ const AddExpenseFormSchema: ObjectSchema<IAddExpenseForm> = yup.object().shape({
   category: string().required(),
   description: string(),
   sharing: yup.boolean(),
+  expenseDate: string().required(),
 });
