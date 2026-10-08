@@ -1,21 +1,25 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 type MenuItemProps = {
   icon: React.ReactNode;
-  label?: string;
-  path?: string;
+  label: string;
+  path: string;
 };
-export default function MenuItem(props: MenuItemProps) {
-  const { icon, label, path } = props;
+
+export default function MenuItem({ icon, label, path }: MenuItemProps) {
   return (
     <li className="flex-1">
-      <Link
-        to={path ?? "#"}
-        className="flex flex-col items-center justify-center gap-1 p-0"
+      <NavLink
+        to={path}
+        className={({ isActive }) =>
+          `flex flex-col items-center justify-center gap-1 py-3 text-sm font-semibold transition-colors ${
+            isActive ? "text-[#a5a0f9]" : "text-white"
+          }`
+        }
       >
         {icon}
-        {label ? <p>{label}</p> : null}
-      </Link>
+        <span>{label}</span>
+      </NavLink>
     </li>
   );
 }
