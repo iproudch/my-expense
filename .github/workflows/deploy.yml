@@ -27,8 +27,11 @@ jobs:
         with:
           node-version: 18.18.0
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install --immutable
 
       - name: Build project
         run: npm run build
