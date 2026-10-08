@@ -11,7 +11,7 @@ export enum EFirebaseCollections {
   MONTHLY_PAYMENTS = "monthly-payments"
 }
 
-export async function addExpense(data: IAddExpenseForm) {
+export async function addExpense(data: Omit<IAddExpenseForm, "expenseDate">) {
   try {
     const collectionRef = collection(db, EFirebaseCollections.EXPENSES);
     await addDoc(collectionRef, data);

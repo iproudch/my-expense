@@ -8,9 +8,10 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { IExpense } from "../interface/expenses";
 import { db } from "../service/firebase.config";
-import { ExpenseList } from "./ExpenseList";
+import { RecentExpenseList } from "./RecentExpenseList";
 import { useAuth } from "../context/UserProvider";
 
 export default function Expenses() {
@@ -24,12 +25,11 @@ export default function Expenses() {
       expensesRef,
       where("userId", "==", userId),
       orderBy("date", "desc"),
-      limit(4)
+      limit(5)
     );
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const expensesData = await getExpenses(snapshot);
-      setExpenses(expensesData.reverse());
+      setExpenses(await getExpenses(snapshot));
     });
 
     return () => unsubscribe();
@@ -37,14 +37,13 @@ export default function Expenses() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <h2 className="font-semibold">Recent</h2>
-        {/* TODO: next phase */}
-        {/* <p className="font-semibold text-sm" style={{ cursor: "pointer" }}>
-          View all
-        </p> */}
+      <div className="flex items-center justify-between px-2">
+        <h2 className="text-xl font-semibold text-white">Recent</h2>
+        <Link to="/history" className="text-base font-medium text-[#8f8bff]">
+          See all
+        </Link>
       </div>
-      {expenses ? <ExpenseList expenses={expenses} /> : null}
+      <RecentExpenseList expenses={expenses} />
     </>
   );
 }

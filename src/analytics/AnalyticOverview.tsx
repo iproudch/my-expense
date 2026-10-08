@@ -1,10 +1,10 @@
-import Header from "../Header";
+import PageHeader from "../PageHeader";
 import { AnalyticsContent } from "./AnalyticContent";
 
 export function AnalyticOverview() {
   return (
-    <div className=" flex flex-col w-96 gap-4">
-      <Header title="Analytics" />
+    <div className="flex w-full flex-col gap-4">
+      <PageHeader subtitle="Monthly totals and shared split" title="Analytics" />
       <AnalyticsContent />
     </div>
   );
