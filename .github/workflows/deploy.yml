@@ -11,7 +11,7 @@ env:
 on:
   push:
     branches:
-      - develop
+      - feat/new-design
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/feat/new-design'
 
     steps:
       - name: Download artifact
